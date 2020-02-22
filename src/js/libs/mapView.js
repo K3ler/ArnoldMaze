@@ -60,7 +60,6 @@ class GameView {
 
         cells.forEach((elemt, index) => {
             if(words[index] != undefined) {
-                console.log(index)
                 setTimeout(() => elemt.classList.add(words[index].class), index*500)
             }
         })
@@ -129,6 +128,10 @@ class GameView {
         
         this.point.endPoint = point
         this.point.endCell = cell
+
+        console.log(this.point.endCell)
+
+        return this
     }
 
     markWinner() {

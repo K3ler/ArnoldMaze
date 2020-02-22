@@ -4,19 +4,20 @@ class GameCtrl {
 
         this.isGameRunning = true
 
-        let [startPoint, endPoint, size] = [[0, 0], [3, 3], [4, 4]]
+        let [startPoint, size] = [[0, 0], [4, 4]]
         let words = []
 
         this.model = new model()
-        words = this.model.run(startPoint, endPoint, size)
-        
+        words = this.model.run(size).getArrows()
         
         this.view = new view('.map', '.controls', size, 10)
         this.view.generateMap()
         this.view.generateControlsField()
         this.view.setStartPoint(startPoint)
-        this.view.setEndPoint(endPoint)
+        
+        let i = words.length
         this.view.addArrows(words)
+        this.view.setEndPoint(words[i-1].cors)
         
         this.setEvents()
     }
