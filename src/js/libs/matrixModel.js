@@ -20,9 +20,6 @@ class MatrixModel {
             currPos = this.makeSteps(currPos)
             this.steps.push(currPos)
         }
-
-        console.log(this.steps.slice())
-
         return this
     }
 

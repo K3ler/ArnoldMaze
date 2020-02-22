@@ -1,13 +1,15 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyPlugin = require('copy-webpack-plugin');
+
 
 module.exports = {
 
     entry: './src/js/index.js',
 
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'docs'),
         filename: 'app.[contenthash].js'
     },
     devServer: {
@@ -56,7 +58,7 @@ module.exports = {
             ]
         },
         {
-            test: /\.(png|jpe?g|gif|svg)$/,
+            test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
             use: [
                 {
                     loader: "file-loader",
@@ -74,7 +76,10 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "bundle.[contenthash].css"
-        })
+        }),
+        new CopyPlugin([
+            { from: 'public' }
+        ])
     ],
     mode: 'development'
 };
