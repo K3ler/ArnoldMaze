@@ -70,10 +70,12 @@ class MapView {
 
     markWinner() {
         this.el.endPos.classList.add('win-pos')
+        document.querySelector('#game-result').innerHTML = 'Вы помогли Арнольду :)'
     }
 
     markLooser(e) {
         e.classList.add('fail-pos')
+        document.querySelector("#game-result").innerHTML = "Вы не помогли Арнольду :("
     }
 
     getSelector(selector) {
