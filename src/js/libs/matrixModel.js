@@ -6,20 +6,23 @@ class MatrixModel {
         this.steps = []
         this.matrixSize = 0
         this.MAX_STEPS = 10
+        this.startPoint = []
+
         return this
     }
 
-    run(size) {
-
+    run(startPoint, size) {
         this.matrixSize = size
         this.matrix = this.generateMatrix(size)
-        let currPos = [0,0]
+        let currPos = startPoint
+        this.startPoint = startPoint
 
         for(let i = 0; i < this.MAX_STEPS; i++) {
 
             currPos = this.makeSteps(currPos)
             this.steps.push(currPos)
         }
+
         return this
     }
 
@@ -33,7 +36,6 @@ class MatrixModel {
 
             return false
         }
-
         const check = (y, x) => {
             let cors = false
             switch(this.range(1, 4)) {
@@ -75,8 +77,11 @@ class MatrixModel {
     }
 
     getArrows() {
-
         return this.getWords()
+    }
+
+    setEndPoint(point) {
+        this.endPoint = point
     }
 
     getRandomPoint(matrixSize) {
@@ -86,7 +91,6 @@ class MatrixModel {
     }
 
     range(min, max) {
-        
         return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
     }
 
@@ -108,7 +112,7 @@ class MatrixModel {
     getWords() {
         
         let path = []
-        let current = [0,0] //this.steps.shift()
+        let current = this.startPoint
         
         const translate = (currentPoint, movePos) => {
 
@@ -143,10 +147,8 @@ class MatrixModel {
             let movePos = this.steps.shift()
             current = translate(current, movePos)
         }
-
         return path
     }
 }
-
 
 export default MatrixModel;

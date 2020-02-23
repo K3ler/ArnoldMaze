@@ -3,50 +3,59 @@ body
     background: #121212
     font-size: 16px
     position: relative
-    
+    font-family: 'Ubuntu Mono', monospace
+    min-width: 320px
+
+.hide 
+    display: none !important
+.show
+    display: flex !important
+
+.container
+    width: 1000px
+    margin: 0 auto
+
+.hero-heading
+    color: white
+    text-align: center
+    font-size: 5em
+
+//// Welcome
+.welcome
+    padding: 40px
+    width: 300px
+    border: 1px solid white
+    margin: 0 auto
+    p
+        color: white
+
+#start-game
+    border: white
+    font-size: 1em
+    width: 100%
+    padding: 15px
+    cursor: pointer
+    outline: none
+    &:hover
+        opacity: 0.9
 
 
-.center
-    display: flex
-    justify-content: center
-    flex-direction: column
-    align-items: center
-
-/*          MAP            */
-.map
-    width: 900px
+/*     MAP      */
+.map-wrapper 
+    width: 100%
 
 .map-table 
     width: 100%
-    height: 55vh
+    height: 420px
     border-collapse: collapse
-
-.heading 
-    color: white
-    font-family: 'Ubuntu Mono', monospace
-    text-align: center
-    font-size: 3.3em
-    margin: 0px
-    padding: 60px 0px 40px 0px
-    letter-spacing: 0.33em
+    border-spacing: 0px
 
 .map-cell
+    height: 100%
     border: 1px solid white
     cursor: pointer
-    background: #121212
-    transition: all 0.1s
-    &:hover
-        background: #1b1b1b
 
-.start-point
-    &::before
-        content: "Старт"
-        font-family: 'Ubuntu Mono', monospace
-        color: white
-        text-align: center
-        display: block
-
-.map-cell.win-point
+.win-pos
     animation: winAnimation 1s ease-out 0s alternate infinite none running
     &::before
        content: "Успех"
@@ -55,8 +64,7 @@ body
        text-align: center
        display: block
 
-
-.map-cell.fail-point
+.fail-pos
     animation: failAnimation 1s ease-out 0s alternate infinite none running
     &::before
        content: "Ошибка"
@@ -67,86 +75,6 @@ body
     &:hover
         background: rgb(225,30,36)
 
-
-
-/*          CONTROLS            */
-.controls
-    width: 500px
-    height: 200px
-    padding: 20px 0px 50px 0px
-    position: relative
-
-.controls-table
-    width: 100%
-    height: 100%
-    border-spacing: 10px 10px
-
-.controls-cell
-    width: 20%
-    height: 20%
-    border: 1px solid white
-    cursor: pointer
-    background: #121212
-    transition: all 0.1s
-
-.popup-fail
-    position: absolute
-    border: 1px solid white
-    background: #121212
-    padding: 20px 100px
-    display: none
-
-.popup-win
-    position: absolute
-    border: 1px solid white
-    background: #121212
-    padding: 20px 100px
-    display: none
-
-.popup__show
-    display: block
-
-.video-fail,
-.video-win
-    width: 300px
-
-
-.start-point
-    &::before
-        content: "Старт"
-        font-family: 'Ubuntu Mono', monospace
-        color: white
-        text-align: center
-        display: block
-
-.arrow-up
-    background: url('../../public/svg/up.svg') no-repeat
-    background-size: 60%
-    background-position: center center
-    animation: showArrow 1s ease-out 0s
-
-.arrow-left
-    background: url('../../public/svg/left.svg')  no-repeat
-    background-size: 60%
-    background-position: center center
-    animation: showArrow 1s ease-out 0s
-    
-.arrow-right
-    background: url('../../public/svg/right.svg')  no-repeat
-    background-size: 60%
-    background-position: center center
-    animation: showArrow 1s ease-out 0s
-
-.arrow-down
-    background: url('../../public/svg/down.svg')  no-repeat
-    background-size: 60%
-    background-position: center center
-    animation: showArrow 1s ease-out 0s 
-
-/*             ANIMATIONS            */
-
-    
-/*      Show Fail or Win            */
 @keyframes winAnimation 
     from 
         background: #00000011
@@ -159,9 +87,109 @@ body
     to
         background: rgb(225,30,36)
 
-/*       Show Arrows                  */
+.ui-block
+    width: 100%
+    height: 220px
+    box-sizing: border-box
+    margin-top: 20px
+    display: none
+    justify-content: flex-start
+
+/*     START/END       */
+.start-point
+    &::before
+        content: "Старт"
+        font-family: 'Ubuntu Mono', monospace
+        color: white
+        text-align: center
+        display: block
+
+
+/*     ARROWS      */
+
+#arrows-block
+    width: 60%
+    box-sizing: border-box
+
+#arrows
+    width: 100%
+    height: 100%
+    box-sizing: border-box
+
+.arrow-table
+    width: 100%
+    height: 100%
+    border-collapse: collapse
+
+.arrow-cell
+    border: 1px solid white
+
+.arrow-up
+    background: url('../../public/svg/up.svg') no-repeat
+    background-size: 50%
+    background-position: center center
+    animation: showArrow 0.4s ease-out 0s
+
+.arrow-left
+    background: url('../../public/svg/left.svg')  no-repeat
+    background-size: 50%
+    background-position: center center
+    animation: showArrow 0.4s ease-out 0s
+    
+.arrow-right
+    background: url('../../public/svg/right.svg')  no-repeat
+    background-size: 50%
+    background-position: center center
+    animation: showArrow 0.4s ease-out 0s
+
+.arrow-down
+    background: url('../../public/svg/down.svg')  no-repeat
+    background-size: 50%
+    background-position: center center
+    animation: showArrow 0.4s ease-out 0s 
+
 @keyframes showArrow
-    from 
-        opacity: 0
-    to
-        opacity: 1
+    0%
+        background: #121212
+    50%
+        background: white
+    100%
+        background: #121212
+
+/// New Game UI
+#ui-btn 
+    width: 40%
+    padding: 0px 0px 20px 20px
+    box-sizing: border-box
+    display: none
+    justify-content: center
+    align-items: flex-start
+    flex-direction: column
+    p
+        color: white
+
+#new-game
+    width: 100%
+    background: #80e27e
+    border: none
+    padding: 20px
+    font-family: "Ubuntu Mono"
+    font-size: 1.3em
+    cursor: pointer
+    box-sizing: border-box
+    outline: none
+
+// POPUP
+#popup
+    display: none
+    height: 220px
+    border: 1px solid white
+    box-sizing: border-box
+
+.video-win,
+.video-fail
+    width: 300px
+    display: block
+    margin: 0 auto
+    box-sizing: border-box
+        

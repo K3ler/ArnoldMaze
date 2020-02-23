@@ -1,170 +1,205 @@
-class GameView {
-    
-    constructor(idMap, idControls, sizeMap, sizeControls) {
+class MapView {
 
-        this.size = {}
-        this.point = {}
-        this.id = {}
-        this.id.mapCells = []
+    constructor() {
 
-        let mapElement = document.querySelector(idMap)
-        let controlsElement = document.querySelector(idControls)
+        // shortcut
+        let el = selector => document.querySelector(selector)
 
-        this.id.mapElement = mapElement
-        this.id.controlsElement = controlsElement
-        this.size.map = [...sizeMap]
-        this.size.controls = sizeControls
-        this.size.moves = 10
-    }
-
-    showFailPopUp(cb) {
-
-        let popup = document.querySelector('.popup-fail')
-        let video = document.querySelector('.video-fail')
-        
-        popup.classList.add('popup__show')
-        video.onended = () => cb()
-        video.play()
-    }
-
-    showWinPopup(cb) {
-        let popup = document.querySelector('.popup-win')
-        let video = document.querySelector('.video-win')
-        
-        popup.classList.add('popup__show')
-        video.onended = () => cb()
-        video.play()
-    }
-
-    hideFailPopUp() {
-        let popup = document.querySelector('.popup-fail')
-        popup.classList.remove('popup__show')
-    }
-
-    hideWinPopUp() {
-        let popup = document.querySelector('.popup-win')
-        popup.classList.remove('popup__show')
-    }
-
-    getMapCells() {
-        return this.id.mapElement.querySelectorAll('.map-cell');
-    }
-    
-    getArrowCells() {
-        return this.id.controlsElement.querySelectorAll(".controls-cell")
-    }
-
-    addArrows(words) {
-
-        let cells = this.getArrowCells()
-
-        cells.forEach((elemt, index) => {
-            if(words[index] != undefined) {
-                setTimeout(() => elemt.classList.add(words[index].class), index*500)
-            }
-        })
-    }
-
-    generateMap() {
-
-        let [sizeY, sizeX] = this.size.map;
-        let table = document.createElement('table')
-        table.classList.add('map-table')
-
-        for( let i = 0; i < sizeY; i++) {
-            let row = document.createElement('tr')
-            row.classList.add('map-row')
-
-            for(let j = 0; j < sizeX; j++) {
-                let cell = document.createElement('td')
-                cell.classList.add('map-cell')
-                cell.style.width = (100 / sizeX) + "%"
-                cell.style.height = (100 / sizeX) + "%"
-                this.id.mapCells.push(cell)
-                row.append(cell)
-            }
-            table.append(row)
-        }
-        this.id.mapElement.append(table)
-    }
-
-    generateControlsField() {
-
-        let table = document.createElement("table")
-        table.classList.add("controls-table")
-        for(let i = 0; i < this.size.moves / 5; i++ ) {
-
-            let row = document.createElement("tr")
-            row.classList.add("controls-row")
-            for (let j = 0; j < this.size.moves / 2; j++) {
-                
-                let cell = document.createElement("td")
-                cell.classList.add("controls-cell")
-                row.append(cell)               
-            }
-            table.append(row)
+        this.el = {
+            header :        el('.hero-heading'),
+            mapRoot :       el("#map"),
+            mapWrapper :    el('#map-wrapper'),
+            uiBlock :       el(".ui-block"),
+            arrowsBlock:    el("#arrows-block"),
+            arrows:         el("#arrows"),
+            popup:          el("#popup"),
+            uiBtn:          el("#ui-btn"),
+            startGame:      el("#start-game"),
+            welcomeBlock:   el(".welcome"),
+            mapCells:       [],
+            arrowsCells:    [],
+            startPoint: 0,
+            endPos: 0,
+            newGame : 0
         }
 
-        this.id.controlsElement.append(table)
+        this.ARROWS_SIZE = 10
     }
 
-    setStartPoint(point) {
-        let [y, x] = point
-        let cell = this.id.mapElement
-                        .querySelectorAll('.map-row')[y]
-                        .querySelectorAll('.map-cell')[x]
-        
-        cell.classList.add('start-point')
-        
-        this.point.startPoint = point
-        this.point.startCell = cell
+    init(start, size) {
+        this.renderMap(size)
+        this.setStart(start)
+        this.renderArrowMap()
     }
 
-    setEndPoint(point) {
-        let [y, x] = point
-        let cell = this.id.mapElement
-                            .querySelectorAll('.map-row')[y]
-                            .querySelectorAll('.map-cell')[x]
-        
-        this.point.endPoint = point
-        this.point.endCell = cell
+    getNewGameBtn() {
+        return document.querySelector('#new-game')
+    }
 
-        console.log(this.point.endCell)
+    getVideoTag(file, cl) {
+        
+        let video = document.createElement("video")
+        let source = document.createElement("source")
+
+        video.setAttribute('preload', 'auto')
+        video.classList.add(cl)
+        source.src = file
+        video.append(source)
+
+        return video
+    }
+
+    showPopup(mode, cb) {
+
+        let video = ""
+
+        if( mode == 'winner') {
+            video = this.getVideoTag("video/win.mp4", 'video-win')
+        }
+
+        if( mode == 'fail') {
+            video = this.getVideoTag("video/fail.mp4", 'video-fail')
+        }
+
+        this.hide('arrows')
+        this.show('popup')
+        this.el.popup.append(video)
+        video.onended = () => cb()
+        video.play()         
+    }
+
+    markWinner() {
+        this.el.endPos.classList.add('win-pos')
+    }
+
+    markLooser(e) {
+        e.classList.add('fail-pos')
+    }
+
+    getSelector(selector) {
+        return this.el[selector]
+    }
+
+    hide(selector) {
+        this.el[selector].classList.remove('show')
+        this.el[selector].classList.toggle('hide')
+    }
+
+    show(selector) {
+        this.el[selector].classList.remove('hide')
+        this.el[selector].classList.toggle('show')
+    }
+
+    renderMap(size) {
+
+        this.el.mapTable = document.createElement("table")
+        this.el.mapTable.classList.add("map-table")
+        let [cols, rows] = size
+
+    
+        for( let i = 0; i < cols; i++) {
+            let tr = document.createElement("tr")
+            tr.classList.add("map-row")
+
+            for ( let j = 0; j < rows; j++) {
+                let td = document.createElement("td")
+                td.classList.add("map-cell")
+                td.style.width = 100 / rows + "%"
+                td.style.height = 100 / cols + "%"
+                this.el.mapCells.push(td)
+                tr.append(td)
+            }
+            this.el.mapTable.append(tr)
+        }
+
+        this.el.mapWrapper.append(this.el.mapTable)
 
         return this
     }
 
-    markWinner() {
-        this.point.endCell.classList.add('win-point')
+    reset() {
+        this.el.mapWrapper.innerHTML = ''
+        this.el.arrows.innerHTML = ''
+
+        return this
     }
 
-    markFail(e) {
-        e.target.classList.add('fail-point')
+    startArrows(path) {
+
+        this.el.arrowsCells.forEach((el, i) => {
+
+            setTimeout(() => {
+                el.classList.add(path[i].class)
+            }, i * 800)
+        })
+
+        return this
+    }
+
+    renderArrowMap() {
+
+        let table   = document.createElement("table")
+        table.classList.add("arrow-table")
+        let cols    = this.ARROWS_SIZE / 5
+        let rows    = this.ARROWS_SIZE / 2
+        
+        for(let i = 0; i < cols; i++) {
+            let tr = document.createElement("tr")
+            tr.classList.add("arrow-row")
+
+            for(let j = 0; j < rows; j++) {
+                
+                let td = document.createElement('td')
+                td.classList.add("arrow-cell")
+                this.el.arrowsCells.push(td)
+                tr.append(td)
+            }
+            table.append(tr)
+        }
+
+        this.el.arrows.append(table)
+        return this
+    }
+
+    setStart(point) {
+
+        let [y, x] = point
+        let startPoint = this.el.mapWrapper.querySelectorAll(".start-point")
+        
+        if ( startPoint.length != 0) {
+            this.el.mapWrapper
+                   .querySelector(".start-point")
+                   .classList.remove("start-point")
+        }
+        
+        this.el.startPoint = this.el
+                                  .mapWrapper
+                                  .querySelectorAll('.map-row')[y]
+                                  .querySelectorAll('.map-cell')[x]
+        
+        this.el.startPoint.classList.add('start-point')
+
+        return this
+    }
+
+    setEnd(endPos) {
+
+        let [y, x] = endPos
+      
+        this.el.endPos = this.el.mapWrapper
+                                .querySelectorAll('.map-row')[y]
+                                .querySelectorAll('.map-cell')[x]
+        
+        this.el.endPos.classList.add('end-point')
     }
 
     getStartPoint() {
-        return this.point.startPoint
-    }
-    
-    getStartCell() {
-        return this.point.startCell
-    }
-
-    getEndCell() {
-        return this.point.endCell;
+        return this.el.startPoint
     }
 
     getEndPoint() {
-        return this.point.endPoint
+        return this.el.endPos
     }
-
-    deleteStartPoint() {
-
-        this.id.mapElement
-                .querySelector('.start-point')
-                .classList.remove('start-point')
-    }
-    
 }
 
-export default GameView;
+export default MapView;

@@ -1,35 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link href="https://fonts.googleapis.com/css?family=PT+Mono&display=swap&subset=cyrillic-ext" rel="stylesheet">
         <title>Тест</title>
-    <link href="bundle.ee761c98d11204ab26b5.css" rel="stylesheet"></head>
+    <link href="bundle.74d7bead5ef9508b36f4.css" rel="stylesheet"></head>
     <body>
+        <div class="container">
+            <header>
+                <h1 class="hero-heading">Лабиринт</h1>
+            </header>
 
-      
+            <main>
+                <div class="welcome">
+                    <p>
+                        Помоги Арнольду найти свою дочку.
+                    </p>
 
-        <div class="center">
-            <h1 class="heading">Лабиринт</h1>
-            
-            <div class="map">
-            </div>
-
-            <div class="controls">
-                <div class="popup-fail">
-                    <video class="video-fail" preload="auto">
-                        <source src="video/fail.mp4">
-                    </video>
+                    <button id="start-game">
+                        Новая игра
+                    </button>
                 </div>
-                <div class="popup-win">
-                    <video class="video-win" preload="auto">
-                        <source src="video/win.mp4">
-                    </video>
+                <div id="map">
+                    <div id="map-wrapper">
+                        <!-- TABLE HERE -->
+                    </div>
                 </div>
-            </div>
+
+                <div class="ui-block">
+                    <div id="arrows-block">
+                        <div id="popup">
+                            
+                        </div>
+                        <div id="arrows"></div>
+                    </div>
+
+                    <div id="ui-btn">
+                        <button id="new-game">
+                            Новая игра
+                        </button>
+                        <p>
+                            Вы не помогли Арнольду :(
+                        </p>
+                    </div>
+                </div>
+
+            </main>
+
 
         </div>
-    <script type="text/javascript" src="app.a96b1000a6409d955bf4.js"></script></body>
+    <script type="text/javascript" src="app.f85600c2ca31919d58df.js"></script></body>
 </html>

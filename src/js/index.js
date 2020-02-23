@@ -5,4 +5,3 @@ import GameCtrl from './libs/gameCtrl'
 
 
 let controller = new GameCtrl(MatrixModel, MapView)
-controller.run()
